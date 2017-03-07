@@ -1,5 +1,7 @@
 package services;
 
+import java.util.List;
+
 import javax.ejb.Remote;
 
 import entities.User;
@@ -13,5 +15,7 @@ public interface SubscriptionServiceRemote {
 	void deleteUser(Integer id);
 	
 	void updateUser(User user);
+	
+	List<User>findAllUsers();
 
 }

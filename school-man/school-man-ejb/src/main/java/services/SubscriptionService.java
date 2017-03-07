@@ -1,5 +1,7 @@
 package services;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -38,6 +40,11 @@ public class SubscriptionService implements SubscriptionServiceRemote, Subscript
 	@Override
 	public void updateUser(User user) {
 		entityManager.merge(user);
+	}
+
+	@Override
+	public List<User> findAllUsers() {
+		return entityManager.createQuery("select u from User u", User.class).getResultList();
 	}
 
 }
