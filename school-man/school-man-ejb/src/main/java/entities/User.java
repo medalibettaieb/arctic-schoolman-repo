@@ -3,6 +3,7 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,11 +23,11 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-
-	@ManyToMany
+	// do not try this at home (fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Course> coursesAttended;
 
-	@OneToMany(mappedBy = "coach")
+	@OneToMany(mappedBy = "coach", cascade = CascadeType.ALL)
 	private List<Course> coursesCoached;
 	private static final long serialVersionUID = 1L;
 
@@ -66,4 +67,10 @@ public class User implements Serializable {
 		this.coursesCoached = coursesCoached;
 	}
 
+	public void linkCoursesToThisUser(List<Course> courses) {
+		this.coursesCoached = courses;
+		for (Course c : courses) {
+			c.setCoach(this);
+		}
+	}
 }

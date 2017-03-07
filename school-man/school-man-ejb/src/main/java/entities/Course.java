@@ -3,7 +3,10 @@ package entities;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -17,10 +20,11 @@ import javax.persistence.ManyToOne;
 public class Course implements Serializable {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 
-	@ManyToMany(mappedBy = "coursesAttended")
+	@ManyToMany(mappedBy = "coursesAttended", cascade = CascadeType.ALL)
 	private List<User> attendees;
 
 	@ManyToOne
@@ -29,6 +33,11 @@ public class Course implements Serializable {
 
 	public Course() {
 		super();
+	}
+
+	public Course(String name) {
+		super();
+		this.name = name;
 	}
 
 	public Integer getId() {
@@ -62,5 +71,10 @@ public class Course implements Serializable {
 	public void setCoach(User coach) {
 		this.coach = coach;
 	}
-
+	public void linkAttendeesToThisCourse(List<User> attendees) {
+		this.attendees = attendees;
+		for (User u : attendees) {
+			u.getCoursesAttended().add(this);
+		}
+	}
 }

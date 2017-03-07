@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import entities.Course;
 import entities.User;
 
 /**
@@ -45,6 +46,38 @@ public class SubscriptionService implements SubscriptionServiceRemote, Subscript
 	@Override
 	public List<User> findAllUsers() {
 		return entityManager.createQuery("select u from User u", User.class).getResultList();
+	}
+
+	@Override
+	public List<Course> findAllCourses() {
+		return entityManager.createQuery("select c from Course c", Course.class).getResultList();
+	}
+
+	@Override
+	public Course findCourseById(Integer id) {
+		return entityManager.find(Course.class, id);
+	}
+
+	@Override
+	public void updateCourse(Course course) {
+		entityManager.merge(course);
+	}
+
+	@Override
+	public List<Course> findCoursesByUserId(Integer id) {
+		User userFound = findUserById(id);
+		return entityManager.createQuery("select c from Course c where :param member of c.attendees", Course.class)
+				.setParameter("param", userFound).getResultList();
+	}
+
+	@Override
+	public void subscribeAttendeesToCourse(List<User> attendees, Integer idCourse) {
+		Course course = findCourseById(idCourse);
+		for (User u : attendees) {
+			findCoursesByUserId(u.getId()).add(course);
+			updateUser(u);
+		}
+
 	}
 
 }
