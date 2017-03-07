@@ -25,4 +25,19 @@ public class SubscriptionService implements SubscriptionServiceRemote, Subscript
 		entityManager.persist(user);
 	}
 
+	@Override
+	public User findUserById(Integer id) {
+		return entityManager.find(User.class, id);
+	}
+
+	@Override
+	public void deleteUser(Integer id) {
+		entityManager.remove(findUserById(id));
+	}
+
+	@Override
+	public void updateUser(User user) {
+		entityManager.merge(user);
+	}
+
 }
