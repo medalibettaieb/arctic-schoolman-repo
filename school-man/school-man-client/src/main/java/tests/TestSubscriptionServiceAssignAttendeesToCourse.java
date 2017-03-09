@@ -7,7 +7,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import entities.Course;
 import entities.Student;
 import entities.User;
 import services.SubscriptionServiceRemote;
@@ -26,11 +25,7 @@ public class TestSubscriptionServiceAssignAttendeesToCourse {
 		attendees.add(student);
 		attendees.add(student2);
 
-		Course course = subscriptionServiceRemote.findCourseById(1);
-		course.linkAttendeesToThisCourse(attendees);
-
-		subscriptionServiceRemote.updateCourse(course);
-
+		subscriptionServiceRemote.subscribeAttendeesToCourse(attendees, 1);
 	}
 
 }

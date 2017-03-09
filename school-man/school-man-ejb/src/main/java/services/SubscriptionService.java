@@ -65,16 +65,22 @@ public class SubscriptionService implements SubscriptionServiceRemote, Subscript
 
 	@Override
 	public List<Course> findCoursesByUserId(Integer id) {
-		User userFound = findUserById(id);
-		return entityManager.createQuery("select c from Course c where :param member of c.attendees", Course.class)
-				.setParameter("param", userFound).getResultList();
+		// User userFound = findUserById(id);
+		// return entityManager.createQuery("select c from Course c where :param
+		// member of c.attendees", Course.class)
+		// .setParameter("param", userFound).getResultList();
+		return entityManager
+				.createQuery("select c from Course c inner join c.attendees cas where cas.id=:param", Course.class)
+				.setParameter("param", id).getResultList();
 	}
 
 	@Override
 	public void subscribeAttendeesToCourse(List<User> attendees, Integer idCourse) {
 		Course course = findCourseById(idCourse);
 		for (User u : attendees) {
-			findCoursesByUserId(u.getId()).add(course);
+			List<Course> courses = findCoursesByUserId(u.getId());
+			courses.add(course);
+			u.setCoursesAttended(courses);
 			updateUser(u);
 		}
 

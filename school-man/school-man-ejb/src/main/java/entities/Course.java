@@ -18,13 +18,12 @@ import javax.persistence.ManyToOne;
 @Entity
 
 public class Course implements Serializable {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
 
-	@ManyToMany(mappedBy = "coursesAttended", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "coursesAttended", cascade = CascadeType.MERGE)
 	private List<User> attendees;
 
 	@ManyToOne
@@ -71,10 +70,5 @@ public class Course implements Serializable {
 	public void setCoach(User coach) {
 		this.coach = coach;
 	}
-	public void linkAttendeesToThisCourse(List<User> attendees) {
-		this.attendees = attendees;
-		for (User u : attendees) {
-			u.getCoursesAttended().add(this);
-		}
-	}
+
 }
